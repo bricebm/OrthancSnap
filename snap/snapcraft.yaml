@@ -88,5 +88,14 @@ parts:
       - "-DSTATIC_BUILD=ON"
       - "-DCMAKE_BUILD_TYPE=Release"
 
+  orthanc-authorization:
+    plugin: cmake
+    source: https://bitbucket.org/osimis/orthanc-authorization/src
+    source-type: hg
+    configflags: 
+      - "-DSTATIC_BUILD=ON"
+      - "-DCMAKE_BUILD_TYPE=Release"
+
+
 
 
