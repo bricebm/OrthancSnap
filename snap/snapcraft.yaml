@@ -9,12 +9,20 @@ description: |
   its users focus on the content of the DICOM files, hiding the complexity 
   of the DICOM format and of the DICOM protocol
 
-grade: devel # must be 'stable' to release into candidate/stable channels
-confinement: devmode # use 'strict' once you have the right plugs and slots
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
 
 apps:
   orthanc:
     command: sbin/Orthanc
+    plugs:
+      - home
+      - network
+      - network-bind
+      
+  orthancrecovercompressedfile:
+    command: OrthancRecoverCompressedFile
+
 
 parts:
   orthanc:
@@ -67,7 +75,6 @@ parts:
     source: https://bitbucket.org/sjodogne/orthanc-databases/src/default/PostgreSQL/
     source-type: hg
     source-subdir: MySQL
-    # source-subdir:
     configflags:
       - "-DSTATIC_BUILD=ON"
       - "-DCMAKE_BUILD_TYPE=Release"
