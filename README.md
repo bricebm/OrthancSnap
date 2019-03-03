@@ -10,3 +10,12 @@ Defautl storage is in /var/snap/orthanc/current/
     * sudo snap stop --disable|enable orthanc
     * sudo snap logs orthanc -f
 
+2. If you want to build locally
+    * Install snapcraft
+        ```$ sudo snap install snapcraft --classic```
+    * Install multipass
+        ```snap install multipass --beta --classic```
+    * Clone the repo
+    * Run snapcraft command from within the directory
+        ```snapcraft```
+
