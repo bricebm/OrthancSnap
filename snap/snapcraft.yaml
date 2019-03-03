@@ -14,16 +14,14 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 
 apps:
   orthanc:
-    command: sbin/Orthanc
+    command: sbin/Orthanc /var/snap/orthanc/current/config_files/
     daemon: simple
     plugs:
       - home
       - network
       - network-bind
-      
   orthancrecovercompressedfile:
     command: OrthancRecoverCompressedFile
-
 
 parts:
   orthanc:

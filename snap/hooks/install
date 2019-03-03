@@ -1,0 +1,547 @@
+#!/bin/sh -e
+
+# Create a default config file
+mkdir $SNAP_DATA/config_files
+touch $SNAP_DATA/config_files/orthanc.json
+touch $SNAP_DATA/config_files/serve-folders.json
+touch $SNAP_DATA/config_files/worklists.json
+
+#!/bin/sh -e
+
+echo '{' >> $SNAP_DATA/config_files/orthanc.json
+echo '  /**' >> $SNAP_DATA/config_files/orthanc.json
+echo '   * General configuration of Orthanc' >> $SNAP_DATA/config_files/orthanc.json
+echo '   **/' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The logical name of this instance of Orthanc. This one is' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // displayed in Orthanc Explorer and at the URI "/system".' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "Name" : "OrthancSnap",' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Path to the directory that holds the heavyweight files \(i.e. the' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // raw DICOM instances\). Backslashes must be either escaped by' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // doubling them, or replaced by forward slashes "/".' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "StorageDirectory" : "Orthanc/orthanc-storage/db-v6",' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Path to the directory that holds the SQLite index \(if unset, the' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // value of StorageDirectory is used\). This index could be stored on' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // a RAM-drive or a SSD device for performance reasons.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "IndexDirectory" : "Orthanc/orthanc-storage/db-v6",' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Path to the directory where Orthanc stores its large temporary' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // files. The content of this folder can be safely deleted if' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Orthanc once stopped. The folder must exist. The corresponding' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // filesystem must be properly sized, given that for instance a ZIP' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // archive of DICOM images created by a job can weight several GBs,' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // and that there might be up to "min\(JobsHistorySize,' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // MediaArchiveSize\)" archives to be stored simultaneously. If not' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // set, Orthanc will use the default temporary folder of the' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // operating system \(such as "/tmp/" on UNIX-like systems, or' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "C:/Temp" on Microsoft Windows\).' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "TemporaryDirectory" : "/tmp/Orthanc/",' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Enable the transparent compression of the DICOM instances' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "StorageCompression" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Maximum size of the storage in MB \(a value of "0" indicates no' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // limit on the storage size\)' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "MaximumStorageSize" : 0,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Maximum number of patients that can be stored at a given time' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // in the storage \(a value of "0" indicates no limit on the number' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // of patients\)' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "MaximumPatientCount" : 0,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // List of paths to the custom Lua scripts that are to be loaded' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // into this instance of Orthanc' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "LuaScripts" : [' >> $SNAP_DATA/config_files/orthanc.json
+echo '  ],' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // List of paths to the plugins that are to be loaded into this' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // instance of Orthanc \(e.g. "./libPluginTest.so" for Linux, or' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "./PluginTest.dll" for Windows\). These paths can refer to' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // folders, in which case they will be scanned non-recursively to' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // find shared libraries. Backslashes must be either escaped by' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // doubling them, or replaced by forward slashes "/".' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "Plugins" : [' >> $SNAP_DATA/config_files/orthanc.json
+echo '    "/snap/orthanc/current/share/orthanc/plugins"' >> $SNAP_DATA/config_files/orthanc.json
+echo '  ],' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "WebViewer" : {' >> $SNAP_DATA/config_files/orthanc.json
+echo '    "CachePath" : "Orthanc/WebViewerCache",' >> $SNAP_DATA/config_files/orthanc.json
+echo '    "CacheSize" : 10,' >> $SNAP_DATA/config_files/orthanc.json
+echo '    "Threads" : 4,' >> $SNAP_DATA/config_files/orthanc.json
+echo '    "EnableGdcm" : false' >> $SNAP_DATA/config_files/orthanc.json
+echo '  },' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Maximum number of processing jobs that are simultaneously running' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // at any given time. A value of "0" indicates to use all the' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // available CPU logical cores. To emulate Orthanc <= 1.3.2, set' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // this value to "1".' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "ConcurrentJobs" : 2,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  /**' >> $SNAP_DATA/config_files/orthanc.json
+echo '   * Configuration of the HTTP server' >> $SNAP_DATA/config_files/orthanc.json
+echo '   **/' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Enable the HTTP server. If this parameter is set to "false",' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Orthanc acts as a pure DICOM server. The REST API and Orthanc' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Explorer will not be available.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "HttpServerEnabled" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // HTTP port for the REST services and for the GUI' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "HttpPort" : 8042,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // When the following option is "true", if an error is encountered' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // while calling the REST API, a JSON message describing the error' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // is put in the HTTP answer. This feature can be disabled if the' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // HTTP client does not properly handles such answers.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "HttpDescribeErrors" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Enable HTTP compression to improve network bandwidth utilization,' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // at the expense of more computations on the server. Orthanc' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // supports the "gzip" and "deflate" HTTP encodings.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "HttpCompressionEnabled" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  /**' >> $SNAP_DATA/config_files/orthanc.json
+echo '   * Configuration of the DICOM server' >> $SNAP_DATA/config_files/orthanc.json
+echo '   **/' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Enable the DICOM server. If this parameter is set to "false",' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Orthanc acts as a pure REST server. It will not be possible to' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // receive files or to do query/retrieve through the DICOM protocol.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DicomServerEnabled" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The DICOM Application Entity Title' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DicomAet" : "ORTHANC",' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Check whether the called AET corresponds to the AET of Orthanc' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // during an incoming DICOM SCU request' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DicomCheckCalledAet" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The DICOM port' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DicomPort" : 4242,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The default encoding that is assumed for DICOM files without' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "SpecificCharacterSet" DICOM tag, and that is used when answering' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // C-Find requests \(including worklists\). The allowed values are' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "Ascii", "Utf8", "Latin1", "Latin2", "Latin3", "Latin4",' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "Latin5", "Cyrillic", "Windows1251", "Arabic", "Greek", "Hebrew",' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "Thai", "Japanese", and "Chinese".' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DefaultEncoding" : "Latin1",' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The transfer syntaxes that are accepted by Orthanc C-Store SCP' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DeflatedTransferSyntaxAccepted"     : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "JpegTransferSyntaxAccepted"         : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "Jpeg2000TransferSyntaxAccepted"     : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "JpegLosslessTransferSyntaxAccepted" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "JpipTransferSyntaxAccepted"         : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "Mpeg2TransferSyntaxAccepted"        : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "RleTransferSyntaxAccepted"          : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Whether Orthanc accepts to act as C-Store SCP for unknown storage' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // SOP classes \(aka. "promiscuous mode"\)' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "UnknownSopClassAccepted"            : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Set the timeout \(in seconds\) after which the DICOM associations' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // are closed by the Orthanc SCP \(server\) if no further DIMSE' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // command is received from the SCU \(client\).' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DicomScpTimeout" : 30,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  /**' >> $SNAP_DATA/config_files/orthanc.json
+echo '   * Security-related options for the HTTP server' >> $SNAP_DATA/config_files/orthanc.json
+echo '   **/' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Whether remote hosts can connect to the HTTP server' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "RemoteAccessAllowed" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Whether or not SSL is enabled' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "SslEnabled" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Path to the SSL certificate in the PEM format \(meaningful only if' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // SSL is enabled\)' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "SslCertificate" : "certificate.pem",' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Whether or not the password protection is enabled' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "AuthenticationEnabled" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The list of the registered users. Because Orthanc uses HTTP' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Basic Authentication, the passwords are stored as plain text.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "RegisteredUsers" : {' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "alice" : "alicePassword"' >> $SNAP_DATA/config_files/orthanc.json
+echo '  },' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  /**' >> $SNAP_DATA/config_files/orthanc.json
+echo '   * Network topology' >> $SNAP_DATA/config_files/orthanc.json
+echo '   **/' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The list of the known DICOM modalities' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DicomModalities" : {' >> $SNAP_DATA/config_files/orthanc.json
+echo '    /**' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * Uncommenting the following line would enable Orthanc to' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * connect to an instance of the "storescp" open-source DICOM' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * store \(shipped in the DCMTK distribution\) started by the' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * command line "storescp 2000".' >> $SNAP_DATA/config_files/orthanc.json
+echo '     **/' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "sample" : [ "STORESCP", "127.0.0.1", 2000 ]' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '    /**' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * A fourth parameter is available to enable patches for' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * specific PACS manufacturers. The allowed values are currently:' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * - "Generic" \(default value\),' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * - "GenericNoWildcardInDates" \(to replace "*" by "" in date fields' >> $SNAP_DATA/config_files/orthanc.json
+echo '     *   in outgoing C-Find requests originating from Orthanc\),' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * - "GenericNoUniversalWildcard" \(to replace "*" by "" in all fields' >> $SNAP_DATA/config_files/orthanc.json
+echo '     *   in outgoing C-Find SCU requests originating from Orthanc\),' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * - "StoreScp" \(storescp tool from DCMTK\),' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * - "ClearCanvas",' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * - "Dcm4Chee",' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * - "Vitrea",' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * - "GE" \(Enterprise Archive, MRI consoles and Advantage Workstation' >> $SNAP_DATA/config_files/orthanc.json
+echo '     *   from GE Healthcare\).' >> $SNAP_DATA/config_files/orthanc.json
+echo '     *' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * This parameter is case-sensitive.' >> $SNAP_DATA/config_files/orthanc.json
+echo '     **/' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "clearcanvas" : [ "CLEARCANVAS", "192.168.1.1", 104, "ClearCanvas" ]' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '    /**' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * By default, the Orthanc SCP accepts all DICOM commands \(C-GET,' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * C-STORE, C-FIND, C-MOVE\) issued by the remote SCU' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * modalities. Starting with Orthanc 1.5.0, it is possible to' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * specify which DICOM commands are allowed, separately for each' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * remote modality, using the syntax below.' >> $SNAP_DATA/config_files/orthanc.json
+echo '     **/' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //"untrusted" : {' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //  "AET" : "ORTHANC",' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //  "Port" : 104,' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //  "Host" : "127.0.0.1",' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //  "AllowEcho" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //  "AllowFind" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //  "AllowMove" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //  "AllowStore" : true' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //}' >> $SNAP_DATA/config_files/orthanc.json
+echo '  },' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Whether to store the DICOM modalities in the Orthanc database' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // instead of in this configuration file \(new in Orthanc 1.5.0\)' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DicomModalitiesInDatabase" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Whether the Orthanc SCP allows incoming C-Echo requests, even' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // from SCU modalities it does not know about \(i.e. that are not' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // listed in the "DicomModalities" option above\). Orthanc 1.3.0' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // is the only version to behave as if this argument was set to "false".' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DicomAlwaysAllowEcho" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Whether the Orthanc SCP allows incoming C-Store requests, even' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // from SCU modalities it does not know about \(i.e. that are not' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // listed in the "DicomModalities" option above\)' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DicomAlwaysAllowStore" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Whether Orthanc checks the IP/hostname address of the remote' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // modality initiating a DICOM connection \(as listed in the' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "DicomModalities" option above\). If this option is set to' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "false", Orthanc only checks the AET of the remote modality.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DicomCheckModalityHost" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The timeout \(in seconds\) after which the DICOM associations are' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // considered as closed by the Orthanc SCU \(client\) if the remote' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // DICOM SCP \(server\) does not answer.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DicomScuTimeout" : 10,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The list of the known Orthanc peers' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "OrthancPeers" : {' >> $SNAP_DATA/config_files/orthanc.json
+echo '    /**' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * Each line gives the base URL of an Orthanc peer, possibly' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * followed by the username/password pair \(if the password' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * protection is enabled on the peer\).' >> $SNAP_DATA/config_files/orthanc.json
+echo '     **/' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "peer"  : [ "http://127.0.0.1:8043/", "alice", "alicePassword" ]' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "peer2" : [ "http://127.0.0.1:8044/" ]' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '    /**' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * This is another, more advanced format to define Orthanc' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * peers. It notably allows to specify HTTP headers, a HTTPS' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * client certificate in the PEM format \(as in the "--cert" option' >> $SNAP_DATA/config_files/orthanc.json
+echo '     * of curl\), or to enable PKCS#11 authentication for smart cards.' >> $SNAP_DATA/config_files/orthanc.json
+echo '     **/' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "peer" : {' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //   "Url" : "http://127.0.0.1:8043/",' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //   "Username" : "alice",' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //   "Password" : "alicePassword",' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //   "HttpHeaders" : { "Token" : "Hello world" },' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //   "CertificateFile" : "client.crt",' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //   "CertificateKeyFile" : "client.key",' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //   "CertificateKeyPassword" : "certpass",' >> $SNAP_DATA/config_files/orthanc.json
+echo '    //   "Pkcs11" : false' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // }' >> $SNAP_DATA/config_files/orthanc.json
+echo '  },' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Whether to store the Orthanc peers in the Orthanc database' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // instead of in this configuration file \(new in Orthanc 1.5.0\)' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "OrthancPeersInDatabase" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Parameters of the HTTP proxy to be used by Orthanc. If set to the' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // empty string, no HTTP proxy is used. For instance:' >> $SNAP_DATA/config_files/orthanc.json
+echo '  //   "HttpProxy" : "192.168.0.1:3128"' >> $SNAP_DATA/config_files/orthanc.json
+echo '  //   "HttpProxy" : "proxyUser:proxyPassword@192.168.0.1:3128"' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "HttpProxy" : "",' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // If set to "true", debug messages from libcurl will be issued' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // whenever Orthanc makes an outgoing HTTP request. This is notably' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // useful to debug HTTPS-related problems.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "HttpVerbose" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Set the timeout for HTTP requests issued by Orthanc \(in seconds\).' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "HttpTimeout" : 10,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Enable the verification of the peers during HTTPS requests. This' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // option must be set to "false" if using self-signed certificates.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Pay attention that setting this option to "false" results in' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // security risks!' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Reference: http://curl.haxx.se/docs/sslcerts.html' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "HttpsVerifyPeers" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Path to the CA \(certification authority\) certificates to validate' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // peers in HTTPS requests. From curl documentation \("--cacert"' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // option\): "Tells curl to use the specified certificate file to' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // verify the peers. The file may contain multiple CA' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // certificates. The certificate\(s\) must be in PEM format." On' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Debian-based systems, this option can be set to' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "/etc/ssl/certs/ca-certificates.crt"' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "HttpsCACertificates" : "",' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  /**' >> $SNAP_DATA/config_files/orthanc.json
+echo '   * Advanced options' >> $SNAP_DATA/config_files/orthanc.json
+echo '   **/' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Dictionary of symbolic names for the user-defined metadata. Each' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // entry must map an unique string to an unique number between 1024' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // and 65535. Reserved values:' >> $SNAP_DATA/config_files/orthanc.json
+echo '  //  - The Orthanc whole-slide imaging plugin uses metadata 4200' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "UserMetadata" : {' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "Sample" : 1024' >> $SNAP_DATA/config_files/orthanc.json
+echo '  },' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Dictionary of symbolic names for the user-defined types of' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // attached files. Each entry must map an unique string to an unique' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // number between 1024 and 65535. Optionally, a second argument can' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // provided to specify a MIME content type for the attachment.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "UserContentType" : {' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "sample" : 1024' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "sample2" : [ 1025, "application/pdf" ]' >> $SNAP_DATA/config_files/orthanc.json
+echo '  },' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Number of seconds without receiving any instance before a' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // patient, a study or a series is considered as stable.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "StableAge" : 60,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // By default, Orthanc compares AET \(Application Entity Titles\) in a' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // case-insensitive way. Setting this option to "true" will enable' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // case-sensitive matching.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "StrictAetComparison" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // When the following option is "true", the MD5 of the DICOM files' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // will be computed and stored in the Orthanc database. This' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // information can be used to detect disk corruption, at the price' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // of a small performance overhead.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "StoreMD5ForAttachments" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The maximum number of results for a single C-FIND request at the' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Patient, Study or Series level. Setting this option to "0" means' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // no limit.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "LimitFindResults" : 0,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The maximum number of results for a single C-FIND request at the' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Instance level. Setting this option to "0" means no limit.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "LimitFindInstances" : 0,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The maximum number of active jobs in the Orthanc scheduler. When' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // this limit is reached, the addition of new jobs is blocked until' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // some job finishes.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "LimitJobs" : 10,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // If this option is set to "true" \(default behavior until Orthanc' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // 1.3.2\), Orthanc will log the resources that are exported to other' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // DICOM modalities or Orthanc peers, inside the URI' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "/exports". Setting this option to "false" is useful to prevent' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // the index to grow indefinitely in auto-routing tasks \(this is the' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // default behavior since Orthanc 1.4.0\).' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "LogExportedResources" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Enable or disable HTTP Keep-Alive \(persistent HTTP' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // connections\). Setting this option to "true" prevents Orthanc' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // issue #32 \("HttpServer does not support multiple HTTP requests in' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // the same TCP stream"\), but can possibly slow down HTTP clients' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // that do not support persistent connections. The default behavior' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // used to be "false" in Orthanc <= 1.5.1. Setting this option to' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "false" is also recommended if Orthanc is compiled against' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Mongoose.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "KeepAlive" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Enable or disable Nagles algorithm. Only taken into' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // consideration if Orthanc is compiled to use CivetWeb. Experiments' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // show that best performance can be obtained by setting both' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "KeepAlive" and "TcpNoDelay" to "true". Beware however of' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // caveats: https://eklitzke.org/the-caveats-of-tcp-nodelay' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "TcpNoDelay" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Number of threads that are used by the embedded HTTP server.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "HttpThreadsCount" : 50,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // If this option is set to "false", Orthanc will run in index-only' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // mode. The DICOM files will not be stored on the drive. Note that' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // this option might prevent the upgrade to newer versions of Orthanc.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "StoreDicom" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // DICOM associations initiated by Lua scripts are kept open as long' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // as new DICOM commands are issued. This option sets the number of' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // seconds of inactivity to wait before automatically closing a' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // DICOM association used by Lua. If set to 0, the connection is' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // closed immediately.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "DicomAssociationCloseDelay" : 5,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Maximum number of query/retrieve DICOM requests that are' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // maintained by Orthanc. The least recently used requests get' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // deleted as new requests are issued.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "QueryRetrieveSize" : 10,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // When handling a C-Find SCP request, setting this flag to "true"' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // will enable case-sensitive match for PN value representation' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // \(such as PatientName\). By default, the search is' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // case-insensitive, which does not follow the DICOM standard.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "CaseSensitivePN" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Configure PKCS#11 to use hardware security modules \(HSM\) and' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // smart cards when carrying on HTTPS client authentication.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  /**' >> $SNAP_DATA/config_files/orthanc.json
+echo '     "Pkcs11" : {' >> $SNAP_DATA/config_files/orthanc.json
+echo '       "Module" : "/usr/local/lib/libbeidpkcs11.so",' >> $SNAP_DATA/config_files/orthanc.json
+echo '       "Module" : "C:/Windows/System32/beidpkcs11.dll",' >> $SNAP_DATA/config_files/orthanc.json
+echo '       "Pin" : "1234",' >> $SNAP_DATA/config_files/orthanc.json
+echo '       "Verbose" : true' >> $SNAP_DATA/config_files/orthanc.json
+echo '     }' >> $SNAP_DATA/config_files/orthanc.json
+echo '   **/' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // If set to "false", Orthanc will not load its default dictionary' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // of private tags. This might be necessary if you cannot import a' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // DICOM file encoded using the Implicit VR Endian transfer syntax,' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // and containing private tags: Such an import error might stem from' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // a bad dictionary. You can still list your private tags of' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // interest in the "Dictionary" configuration option below.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "LoadPrivateDictionary" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Locale to be used by Orthanc. Currently, only used if comparing' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // strings in a case-insensitive way. It should be safe to keep this' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // value undefined, which lets Orthanc autodetect the suitable locale.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "Locale" : "en_US.UTF-8",' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Register a new tag in the dictionary of DICOM tags that are known' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // to Orthanc. Each line must contain the tag \(formatted as 2' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // hexadecimal numbers\), the value representation \(2 upcase' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // characters\), a nickname for the tag, possibly the minimum' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // multiplicity \(> 0 with defaults to 1\), possibly the maximum' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // multiplicity \(0 means arbitrary multiplicity, defaults to 1\), and' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // possibly the Private Creator \(for private tags\).' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "Dictionary" : {' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "0014,1020" : [ "DA", "ValidationExpiryDate", 1, 1 ]' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "00e1,10c2" : [ "UI", "PET-CT Multi Modality Name", 1, 1, "ELSCINT1" ]' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "7053,1003" : [ "ST", "Original Image Filename", 1, 1, "Philips PET Private Group" ]' >> $SNAP_DATA/config_files/orthanc.json
+echo '    // "2001,5f" : [ "SQ", "StackSequence", 1, 1, "Philips Imaging DD 001" ]' >> $SNAP_DATA/config_files/orthanc.json
+echo '  },' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Whether to run DICOM C-Move operations synchronously. If set to' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "false" \(asynchronous mode\), each incoming C-Move request results' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // in the creation of a new background job. Up to Orthanc 1.3.2, the' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // implicit behavior was to use synchronous C-Move \("true"\). Between' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Orthanc 1.4.0 and 1.4.2, the default behavior was set to' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // asynchronous C-Move \("false"\). Since Orthanc 1.5.0, the default' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // behavior is back to synchronous C-Move \("true", which ensures' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // backward compatibility with Orthanc <= 1.3.2\).' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "SynchronousCMove" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Maximum number of completed jobs that are kept in memory. A' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // processing job is considered as complete once it is tagged as' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "Success" or "Failure". Since Orthanc 1.5.0, a value of "0"' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // indicates to keep no job in memory \(i.e. jobs are removed from' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // the history as soon as they are completed\), which prevents the' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // use of some features of Orthanc \(typically, synchronous mode in' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // REST API\) and should be avoided for non-developers.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "JobsHistorySize" : 10,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Whether to save the jobs into the Orthanc database. If this' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // option is set to "true", the pending/running/completed jobs are' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // automatically reloaded from the database if Orthanc is stopped' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // then restarted \(except if the "--no-jobs" command-line argument' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // is specified\). This option should be set to "false" if multiple' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Orthanc servers are using the same database \(e.g. if PostgreSQL' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // or MariaDB/MySQL is used\).' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "SaveJobs" : true,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Specifies how Orthanc reacts when it receives a DICOM instance' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // whose SOPInstanceUID is already stored. If set to "true", the new' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // instance replaces the old one. If set to "false", the new' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // instance is discarded and the old one is kept. Up to Orthanc' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // 1.4.1, the implicit behavior corresponded to "false".' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "OverwriteInstances" : false,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Maximum number of ZIP/media archives that are maintained by' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Orthanc, as a response to the asynchronous creation of archives.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // The least recently used archives get deleted as new archives are' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // generated. This option was introduced in Orthanc 1.5.0, and has' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // no effect on the synchronous generation of archives.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "MediaArchiveSize" : 1,' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Performance setting to specify how Orthanc accesses the storage' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // area during C-FIND. Three modes are available: \(1\) "Always"' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // allows Orthanc to read the storage area as soon as it needs an' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // information that is not present in its database \(slowest mode\),' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // \(2\) "Never" prevents Orthanc from accessing the storage area, and' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // makes it uses exclusively its database \(fastest mode\), and \(3\)' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "Answers" allows Orthanc to read the storage area to generate its' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // answers, but not to filter the DICOM resources \(balance between' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // the two modes\). By default, the mode is "Always", which' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // corresponds to the behavior of Orthanc <= 1.5.0.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "StorageAccessOnFind" : "Always",' >> $SNAP_DATA/config_files/orthanc.json
+echo '' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // Whether Orthanc monitors its metrics \(new in Orthanc 1.5.4\). If' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // set to "true", the metrics can be retrieved at' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // "/tools/metrics-prometheus" formetted using the Prometheus' >> $SNAP_DATA/config_files/orthanc.json
+echo '  // text-based exposition format.' >> $SNAP_DATA/config_files/orthanc.json
+echo '  "MetricsEnabled" : true' >> $SNAP_DATA/config_files/orthanc.json
+echo '}' >> $SNAP_DATA/config_files/orthanc.json
+
+echo '{' >> $SNAP_DATA/config_files/serve-folders.json
+echo '  /**' >> $SNAP_DATA/config_files/serve-folders.json
+echo '   * Configuration of the ServeFolders plugin, that can be used to' >> $SNAP_DATA/config_files/serve-folders.json
+echo '   * serve additional folders through the embedded Web server of' >> $SNAP_DATA/config_files/serve-folders.json
+echo '   * Orthanc. This is especially useful to avoid problems related to' >> $SNAP_DATA/config_files/serve-folders.json
+echo '   * the same-origin policy when developing Web applications in' >> $SNAP_DATA/config_files/serve-folders.json
+echo '   * JavaScript on the top of the REST API of Orthanc.' >> $SNAP_DATA/config_files/serve-folders.json
+echo '   *' >> $SNAP_DATA/config_files/serve-folders.json
+echo '   * The commented example would serve the documentation of the plugin' >> $SNAP_DATA/config_files/serve-folders.json
+echo '   * SDK at the URL http://localhost:8042/doc/index.html' >> $SNAP_DATA/config_files/serve-folders.json
+echo '   **/' >> $SNAP_DATA/config_files/serve-folders.json
+echo '  "ServeFolders" : {' >> $SNAP_DATA/config_files/serve-folders.json
+echo '    // "/doc" : "/usr/share/doc/orthanc/OrthancPlugin"' >> $SNAP_DATA/config_files/serve-folders.json
+echo '  }' >> $SNAP_DATA/config_files/serve-folders.json
+echo '}' >> $SNAP_DATA/config_files/serve-folders.json
+
+echo '{' >> $SNAP_DATA/config_files/worklists.json
+echo '  /**' >> $SNAP_DATA/config_files/worklists.json
+echo '   * Configuration of the ModalityWorklists plugin, that can be used' >> $SNAP_DATA/config_files/worklists.json
+echo '   * to serve DICOM modality worklists. More information about this' >> $SNAP_DATA/config_files/worklists.json
+echo '   * plugin is available in the source distribution at:' >> $SNAP_DATA/config_files/worklists.json
+echo '   * https://bitbucket.org/sjodogne/orthanc/src/default/Plugins/Samples/ModalityWorklists/README' >> $SNAP_DATA/config_files/worklists.json
+echo '   **/' >> $SNAP_DATA/config_files/worklists.json
+echo '  "Worklists" : {' >> $SNAP_DATA/config_files/worklists.json
+echo '    "Enable": false,' >> $SNAP_DATA/config_files/worklists.json
+echo '    "Database": "/var/lib/orthanc/worklists"' >> $SNAP_DATA/config_files/worklists.json
+echo '  }' >> $SNAP_DATA/config_files/worklists.json
+echo '}' >> $SNAP_DATA/config_files/worklists.json
