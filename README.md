@@ -18,4 +18,8 @@ Defautl storage is in /var/snap/orthanc/current/
     * Clone the repo
     * Run snapcraft command from within the directory
         ```snapcraft```
+    * This will produce an snap package that can be installed locally
+        ```sudo snap install <orthanc-snap> --dangerous```
+        * --dangerous flag is needed due to sideloading the snap package.
+    * Snapcraft documentation can be found at snapcraft.io
 
